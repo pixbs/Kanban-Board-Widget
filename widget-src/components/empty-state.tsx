@@ -1,4 +1,3 @@
-import addColumn from "../utils/add-column"
 import Button from "./button"
 
 const { widget } = figma

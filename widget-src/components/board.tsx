@@ -1,6 +1,7 @@
 import EmptyState from "./empty-state"
 import Button from "./button"
 import Column from "./column"
+import createColumn from "../utils/create-column"
 
 const { widget } = figma
 const { AutoLayout, useSyncedState, Text } = widget
@@ -15,20 +16,21 @@ function Board() {
 		return columnId
 	}
 
-	const addColumn = () => {
-		setBoard([ ...board, {
+	const handleCreateColumn = () => {
+		const newColumn = {
 			id: updateColumnId(),
 			name: `Column ${updateColumnId()}`,
 			cards: []
-		}])
+		}
+		setBoard(createColumn(board, newColumn))
 	}
 
 	return (
 		<AutoLayout>
-			<Button text="Add column" onClick={addColumn} />
+			<Button text="Add column" onClick={handleCreateColumn} />
 			{board.length > 0
 				? board.map(column => <Column {...column}/>)
-				: <EmptyState onClick={addColumn} title="No columns were added" buttonText="Add column"/>
+				: <EmptyState onClick={handleCreateColumn} title="No columns were added" buttonText="Add column"/>
 			}
 		</AutoLayout>
 	)

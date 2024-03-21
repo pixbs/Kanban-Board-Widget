@@ -1,3 +1,6 @@
+import createCard from "../utils/create-card"
+import deleteColumn from "../utils/delete-column"
+import moveColumn from "../utils/move-column"
 import Button from "./button"
 import Card from "./card"
 
@@ -8,28 +11,28 @@ function Column(props: ColumnProps) {
 	const { id, name, cards } = props
 
 	const [board, setBoard] = useSyncedState<ColumnProps[]>(`board`, [])
+	const columnIndex = board.findIndex(column => column.id === id)
 	const [cardId, setCardId] = useSyncedState<number>(`cardId`, 0)
-	
+
 	function createCardId() {
 		setCardId(cardId + 1)
 		return cardId
 	}
 
-	function createCard() {
+	function handleMoveColumn(index: number) {
+		setBoard(moveColumn(board, {...props}, index))
+	}
+
+	function handleCreateCard() {
 		const newCard = {
 			id: createCardId(),
 			name: `Card ${createCardId()}`,
 		}
-		var newBoard = board
-		newBoard.find(column => column.id === id)?.cards.push(newCard)
-		setBoard(newBoard)
+		setBoard(createCard(board, newCard, columnIndex))
 	}
 
-	function deleteColumn() {
-		var newBoard = board
-		newBoard = newBoard.filter(column => column.id !== id)
-		setBoard(newBoard)
-		figma.notify(`Column ${name} was deleted`)
+	function handleDeleteColumn() {
+		setBoard(deleteColumn(board, id))
 	}
 
 	return (
@@ -38,9 +41,12 @@ function Column(props: ColumnProps) {
 			key={id}
 		>
 			<Text>{name}</Text>
-			<Button text="Add card" onClick={createCard}/>
-			<Button text="Delete column" onClick={deleteColumn}/>
-			{cards.map(card => <Card {...card}/>)}
+
+			<Button text="Add card" onClick={handleCreateCard} />
+			<Button text="Move left" onClick={() => handleMoveColumn(columnIndex - 1)} />
+			<Button text="Move right" onClick={() => handleMoveColumn(columnIndex + 1)} />
+			<Button text="Delete column" onClick={handleDeleteColumn} />
+			{cards.map(card => <Card {...card} />)}
 		</AutoLayout>
 	)
 }
