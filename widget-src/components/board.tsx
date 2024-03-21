@@ -17,7 +17,7 @@ function Board() {
 
 	const addColumn = () => {
 		setColumns([ ...columns, {
-			index: updateColumnId(),
+			id: updateColumnId(),
 			name: `Column ${updateColumnId()}`,
 		}])
 	}
