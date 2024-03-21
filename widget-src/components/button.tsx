@@ -11,6 +11,7 @@ function Button(props: ButtonProps) {
 	return (
 		<AutoLayout
 			fill='#0000FF'
+			hoverStyle={{opacity: 0.8}}
 			{...rest}
 		>
 			<Text> {text} </Text>

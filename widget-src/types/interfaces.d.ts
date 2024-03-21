@@ -1,10 +1,10 @@
 interface ColumnProps {
 	id : number,
 	name : string,
+	cards : CardProps[],
 }
 
 interface CardProps {
-	columnId : number,
 	id : number,
 	name : string,
 }
