@@ -24,12 +24,21 @@ function Card(props: CardProps) {
 	function handleVerMovement(index: number) {
 		setBoard(moveCard(board, props, columnIndex, index))
 	}
+
+	async function handleClick() {
+		await new Promise (() => {
+			figma.showUI(__html__)
+			figma.ui.postMessage(props)
+		})
+	}
+	
 	return (
 		<AutoLayout
 			direction="vertical"
 			padding={8}
 			fill="#fff"
 			key={id}
+			onClick={handleClick}
 		>
 			<Text>{name}</Text>
 			<Button text="Move left" onClick={() => handleHorMovement(columnIndex - 1)} />
