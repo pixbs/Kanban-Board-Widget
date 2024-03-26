@@ -2,11 +2,20 @@ import EmptyState from "./empty-state"
 import Button from "./button"
 import Column from "./column"
 import createColumn from "../utils/create-column"
+import deleteCard from "../utils/delete-card"
+import moveCard from "../utils/move-card"
+import cardAction from "../utils/card-actions"
 
 const { widget } = figma
-const { AutoLayout, useSyncedState, Text } = widget
+const { AutoLayout, useSyncedState, Text, useEffect } = widget
 
 function Board() {
+
+	useEffect(() => {
+		figma.ui.on('message', (message) => {
+			setBoard(cardAction(message.type, message.card, board))
+		})
+	})
 
 	const [board, setBoard] = useSyncedState<ColumnProps[]>("board", [])
 	const [columnId, setColumnId] = useSyncedState<number>("columnId", 0)

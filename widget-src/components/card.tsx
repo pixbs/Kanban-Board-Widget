@@ -26,8 +26,9 @@ function Card(props: CardProps) {
 	}
 
 	async function handleClick() {
-		await new Promise ((resolve) => {
+		await new Promise (() => {
 			figma.showUI(__html__)
+			figma.ui.postMessage(props)
 		})
 	}
 	
