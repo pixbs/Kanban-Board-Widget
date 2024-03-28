@@ -5,6 +5,7 @@ import createColumn from "../utils/create-column"
 import deleteCard from "../utils/delete-card"
 import moveCard from "../utils/move-card"
 import cardAction from "../utils/card-actions"
+import columnAction from "../utils/column-actions"
 
 const { widget } = figma
 const { AutoLayout, useSyncedState, Text, useEffect } = widget
@@ -13,7 +14,16 @@ function Board() {
 
 	useEffect(() => {
 		figma.ui.on('message', (message) => {
-			setBoard(cardAction(message.type, message.card, board))
+			const { sender, type, content } = message
+			switch(sender) {
+				case "card":
+					setBoard(cardAction(type, content, board))
+					break
+				case "column":
+					setBoard(columnAction(type, content, board))
+					break
+			}
+			
 		})
 	})
 

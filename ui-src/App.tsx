@@ -1,54 +1,34 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import Card from "./card";
+import Column from "./column";
 
 function App() {
 	const [card, setCard] = useState<CardProps>({id: 0, name: ""});
+	const [column, setColumn] = useState<ColumnProps>({id: 0, name: "", cards: []});
+	const [type, setType] = useState('none')
 	onmessage = (event) => {
-		const message = event.data.pluginMessage;
-		setCard(message);
+		const {type, content} = event.data.pluginMessage;
+		switch (type) {
+			case "card":
+				setCard(content);
+				setType("card");
+				break
+			case "column":
+				setColumn(content);
+				console.log(content)
+				setType("column");
+				break;
+		}
 	}
 
+	const display: { [key: string]: JSX.Element } = {
+		"card": <Card {...card} />,
+		"column": <Column {...column} />,
+		"none": <h1>...loading</h1>
+	}
 
-	return (
-		<div className="App">
-			<h1>{card.name}</h1>
-			<button
-				onClick={() => {
-					parent?.postMessage({ pluginMessage: {type: "delete", card: card} }, "*");
-				}}
-			>
-				Delete card
-			</button>
-			<button
-				onClick={() => {
-					parent?.postMessage({ pluginMessage: {type: "move-left", card: card} }, "*");
-				}}
-			>
-				Move left
-			</button>
-			<button
-				onClick={() => {
-					parent?.postMessage({ pluginMessage: {type: "move-right", card: card} }, "*");
-				}}
-			>
-				Move right
-			</button>
-			<button
-				onClick={() => {
-					parent?.postMessage({ pluginMessage: {type: "move-up", card: card} }, "*");
-				}}
-			>
-				Move up
-			</button>
-			<button
-				onClick={() => {
-					parent?.postMessage({ pluginMessage: {type: "move-down", card: card} }, "*");
-				}}
-			>
-				Move down
-			</button>
-		</div>
-	);
+	return <>{display[type]}</>
 }
 
 export default App;

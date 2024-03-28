@@ -5,5 +5,5 @@
 npm i
 ```
 ```bash
-npm run watch
+npm run dev
 ```

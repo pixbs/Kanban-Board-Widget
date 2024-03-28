@@ -35,12 +35,23 @@ function Column(props: ColumnProps) {
 		setBoard(deleteColumn(board, id))
 	}
 
+	async function handleClick() {
+		await new Promise (() => {
+			figma.showUI(__html__)
+			figma.ui.postMessage({type: "column", content: props})
+		})
+	}
+
 	return (
 		<AutoLayout
 			direction="vertical"
 			key={id}
 		>
-			<Text>{name}</Text>
+			<Text
+			onClick={handleClick}
+			>
+				{name}
+			</Text>
 
 			<Button text="Add card" onClick={handleCreateCard} />
 			<Button text="Move left" onClick={() => handleMoveColumn(columnIndex - 1)} />
