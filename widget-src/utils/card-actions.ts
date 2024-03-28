@@ -5,7 +5,7 @@ function cardAction(type: string, card: CardProps, board: ColumnProps[] | undefi
 	if (!board) return []
 	const columnIndex = board.findIndex(column => column.cards.some(c => c.id === card.id))
 	const cardIndex = board[columnIndex].cards.findIndex(c => c.id === card.id)
-	
+
 	switch (type) {
 		case 'delete':
 			return deleteCard(card.id, board)

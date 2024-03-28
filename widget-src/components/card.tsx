@@ -1,4 +1,3 @@
-import createCard from "../utils/create-card"
 import deleteCard from "../utils/delete-card"
 import moveCard from "../utils/move-card"
 import Button from "./button"
@@ -28,7 +27,7 @@ function Card(props: CardProps) {
 	async function handleClick() {
 		await new Promise (() => {
 			figma.showUI(__html__)
-			figma.ui.postMessage(props)
+			figma.ui.postMessage({type: "card", content: props})
 		})
 	}
 	
