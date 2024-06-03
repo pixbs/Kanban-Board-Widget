@@ -1,101 +1,77 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CardSchema } from "./types/schemas";
-import InputForm from "./components/input";
+import Input from "./components/input";
+import Textarea from "./components/textarea";
+import Select from "./components/select";
+import Form from "./components/form";
 
 type FormData = z.infer<typeof CardSchema>;
 
 function Card(card: CardProps) {
 	const { id, name } = card;
+
 	function sendMessage(type: string) {
-		//console.log(card)
 		parent?.postMessage({ pluginMessage: { sender: "card", type: type, content: card } }, "*");
 	}
-	return (
-		<div className="App">
-			<h1>{name}</h1>
-			<button
-				onClick={() => {
-					sendMessage("delete");
-				}}
-			>
-				Delete card
-			</button>
-			<button
-				onClick={() => {
-					sendMessage("move-left");
-				}}
-			>
-				Move left
-			</button>
-			<button
-				onClick={() => {
-					sendMessage("move-right");
-				}}
-			>
-				Move right
-			</button>
-			<button
-				onClick={() => {
-					sendMessage("move-up");
-				}}
-			>
-				Move up
-			</button>
-			<button
-				onClick={() => {
-					sendMessage("move-down");
-				}}
-			>
-				Move down
-			</button>
-			<Form />
-		</div>
-	)
-}
-
-function Form() {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-		setError,
-	} = useForm<FormData>({
-		resolver: zodResolver(CardSchema),
-	});
 
 	const onSubmit = async (data: FormData) => {
 		console.log(data);
 	}
 
+	const assigneeOptions = ["Alice", "Bob", "Charlie"];
+
+	const actions = [
+		["delete", "Delete card"],
+		["move-left", "Move left"],
+		["move-right", "Move right"],
+		["move-up", "Move up"],
+		["move-down", "Move down"]
+	]
+
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
-			<label>
-				Name:
-				<input {...register("name")}/>
-				{errors.name && <p>{errors.name.message}</p>}
-			</label>
-			<label>
-				Due date:
-				<input {...register("dueDate")} type="date" />
-			</label>
-			<label>
-				Description:
-				<textarea {...register("description")} />
-			</label>
-			<label>
-				Assignee:
-				<select {...register("assignee")}>
-					<option value="">Select assignee</option>
-					<option value="alice">Alice</option>
-					<option value="bob">Bob</option>
-					<option value="charlie">Charlie</option>
-				</select>
-			</label>
-			<button type="submit">Submit</button>
-		</form>
+		<div className="App">
+			<h1>{name}</h1>
+			{
+				actions.map(([type, label]) => (
+					<button
+						key={type}
+						onClick={() => {
+							sendMessage(type);
+						}}
+					>
+						{label}
+					</button>
+				))
+			}
+			<Form schema={CardSchema} onSubmit={onSubmit}>
+				<Input
+					name="name" 
+					label="Name"
+					defaultValue={name}
+				/>
+				<Input
+					name="dueDate" 
+					label="Due date" 
+					type="date"
+				/>
+				<Textarea
+					name="description"
+					label="Description"
+				/>
+				<Select
+					name="assignee"
+					label="Assignee"
+					options={assigneeOptions}
+				/>
+				<button
+					type="submit">
+					Submit
+				</button>
+			</Form>
+		</div>
 	)
 }
 

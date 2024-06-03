@@ -7,7 +7,6 @@ export const CardSchema = z.object({
 		.max(64),
 	dueDate: z
 		.string()
-		.date()
 		.optional(),
 	description: z
 		.string()
