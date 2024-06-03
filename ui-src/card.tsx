@@ -44,8 +44,44 @@ function Card(card : CardProps) {
 			>
 				Move down
 			</button>
+			<Form/>
 		</div>
     )
+}
+
+function Form() {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const data = new FormData(event.currentTarget);
+		console.log(JSON.stringify(Object.fromEntries(data.entries())));
+	}
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<label>
+				Name:
+				<input type="text" name="name" />
+			</label>
+			<label>
+				Due date:
+				<input type="date" name="due-date" />
+			</label>
+			<label>
+				Description:
+				<textarea name="description" />
+			</label>
+			<label>
+				Assignee:
+				<select name="assignee">
+					<option value="">Select assignee</option>
+					<option value="alice">Alice</option>
+					<option value="bob">Bob</option>
+					<option value="charlie">Charlie</option>
+				</select>
+			</label>
+			<input type="submit" value="Submit" />
+		</form>
+	)
 }
 
 export default Card;
