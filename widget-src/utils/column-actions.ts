@@ -12,6 +12,8 @@ function columnAction(type: string, column: ColumnProps, board: ColumnProps[] | 
             return moveColumn(board, column, columnIndex - 1)
         case 'move-right':
             return moveColumn(board, column, columnIndex + 1)
+		case 'update':
+			return board.map(c => c.id === column.id ? column : c)
     }
     return board
 }

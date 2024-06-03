@@ -7,4 +7,7 @@ interface ColumnProps {
 interface CardProps {
 	id : number,
 	name : string,
+	dueDate? : string,
+	description? : string,
+	assignee? : string,
 }

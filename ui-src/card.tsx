@@ -1,27 +1,24 @@
-import React from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CardSchema } from "./types/schemas";
-import Input from "./components/input";
-import Textarea from "./components/textarea";
-import Select from "./components/select";
-import Form from "./components/form";
-
-type FormData = z.infer<typeof CardSchema>;
+import React from "react"
+import { CardSchema } from "./types/schemas"
+import Input from "./components/input"
+import Textarea from "./components/textarea"
+import Select from "./components/select"
+import Form from "./components/form"
 
 function Card(card: CardProps) {
-	const { id, name } = card;
+	const [currentCard, setCurrentCard] = React.useState<CardProps>(card)
 
-	function sendMessage(type: string) {
-		parent?.postMessage({ pluginMessage: { sender: "card", type: type, content: card } }, "*");
+	const sendMessage = (type: string) => {
+		parent?.postMessage({ pluginMessage: { sender: "card", type: type, content: card } }, "*")
 	}
 
 	const onSubmit = async (data: FormData) => {
-		console.log(data);
+		card = { ...card, ...data }
+		setCurrentCard(card)
+		sendMessage("update")
 	}
 
-	const assigneeOptions = ["Alice", "Bob", "Charlie"];
+	const assigneeOptions = ["Alice", "Bob", "Charlie"]
 
 	const actions = [
 		["delete", "Delete card"],
@@ -33,13 +30,13 @@ function Card(card: CardProps) {
 
 	return (
 		<div className="App">
-			<h1>{name}</h1>
+			<h1>{currentCard.name}</h1>
 			{
 				actions.map(([type, label]) => (
 					<button
 						key={type}
 						onClick={() => {
-							sendMessage(type);
+							sendMessage(type)
 						}}
 					>
 						{label}
@@ -50,21 +47,24 @@ function Card(card: CardProps) {
 				<Input
 					name="name" 
 					label="Name"
-					defaultValue={name}
+					defaultValue={currentCard.name}
 				/>
 				<Input
 					name="dueDate" 
 					label="Due date" 
 					type="date"
+					defaultValue={currentCard.dueDate}
 				/>
 				<Textarea
 					name="description"
 					label="Description"
+					defaultValue={currentCard.description}
 				/>
 				<Select
 					name="assignee"
 					label="Assignee"
 					options={assigneeOptions}
+					defaultValue={currentCard.assignee}
 				/>
 				<button
 					type="submit">
@@ -75,4 +75,4 @@ function Card(card: CardProps) {
 	)
 }
 
-export default Card;
+export default Card

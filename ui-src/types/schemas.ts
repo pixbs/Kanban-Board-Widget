@@ -15,3 +15,10 @@ export const CardSchema = z.object({
 		.string()
 		.optional(),
 })
+
+export const ColumnSchema = z.object({
+	name: z
+		.string()
+		.min(1)
+		.max(64)
+})
