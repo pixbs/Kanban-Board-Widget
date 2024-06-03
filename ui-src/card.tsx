@@ -1,13 +1,20 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CardSchema } from "./types/schemas";
+import InputForm from "./components/input";
 
-function Card(card : CardProps) {
-    const { id, name } = card;
+type FormData = z.infer<typeof CardSchema>;
+
+function Card(card: CardProps) {
+	const { id, name } = card;
 	function sendMessage(type: string) {
 		//console.log(card)
-		parent?.postMessage({ pluginMessage: {sender: "card", type: type, content: card} }, "*");
+		parent?.postMessage({ pluginMessage: { sender: "card", type: type, content: card } }, "*");
 	}
-    return (
-        <div className="App">
+	return (
+		<div className="App">
 			<h1>{name}</h1>
 			<button
 				onClick={() => {
@@ -44,42 +51,50 @@ function Card(card : CardProps) {
 			>
 				Move down
 			</button>
-			<Form/>
+			<Form />
 		</div>
-    )
+	)
 }
 
 function Form() {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		console.log(JSON.stringify(Object.fromEntries(data.entries())));
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		setError,
+	} = useForm<FormData>({
+		resolver: zodResolver(CardSchema),
+	});
+
+	const onSubmit = async (data: FormData) => {
+		console.log(data);
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<label>
 				Name:
-				<input type="text" name="name" />
+				<input {...register("name")}/>
+				{errors.name && <p>{errors.name.message}</p>}
 			</label>
 			<label>
 				Due date:
-				<input type="date" name="due-date" />
+				<input {...register("dueDate")} type="date" />
 			</label>
 			<label>
 				Description:
-				<textarea name="description" />
+				<textarea {...register("description")} />
 			</label>
 			<label>
 				Assignee:
-				<select name="assignee">
+				<select {...register("assignee")}>
 					<option value="">Select assignee</option>
 					<option value="alice">Alice</option>
 					<option value="bob">Bob</option>
 					<option value="charlie">Charlie</option>
 				</select>
 			</label>
-			<input type="submit" value="Submit" />
+			<button type="submit">Submit</button>
 		</form>
 	)
 }

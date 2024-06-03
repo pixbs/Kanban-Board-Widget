@@ -18,3 +18,11 @@ form, label {
   align-items: stretch;
   justify-content: top;
 }
+
+form {
+	gap: 1rem;
+}
+
+label {
+	gap: 0.5rem;
+}
