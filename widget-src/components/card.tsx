@@ -6,27 +6,14 @@ const { widget } = figma
 const { AutoLayout, useSyncedState, Text } = widget
 
 function Card(props: CardProps) {
-	const { id, name } = props
-	const [board, setBoard] = useSyncedState<ColumnProps[]>(`board`, [])
-	const columnIndex = board.findIndex(column => column.cards.some(card => card.id === id))
-	const cardIndex = board[columnIndex].cards.findIndex(card => card.id === id)
-
-	function handleDeleteCard() {
-		setBoard(deleteCard(id, board))
-		figma.notify(`Card ${name} was deleted`)
-	}
-
-	function handleHorMovement(index: number) {
-		setBoard(moveCard(board, props, index, cardIndex))
-	}
-
-	function handleVerMovement(index: number) {
-		setBoard(moveCard(board, props, columnIndex, index))
-	}
+	const { id, name, dueDate, description, assignee } = props
+	// const [board, setBoard] = useSyncedState<ColumnProps[]>(`board`, [])
+	// const columnIndex = board.findIndex(column => column.cards.some(card => card.id === id))
+	// const cardIndex = board[columnIndex].cards.findIndex(card => card.id === id)
 
 	async function handleClick() {
 		await new Promise (() => {
-			figma.showUI(__html__)
+			figma.showUI(__html__, {width: 360, height: 640})
 			figma.ui.postMessage({type: "card", content: props})
 		})
 	}
@@ -40,11 +27,9 @@ function Card(props: CardProps) {
 			onClick={handleClick}
 		>
 			<Text>{name}</Text>
-			<Button text="Move left" onClick={() => handleHorMovement(columnIndex - 1)} />
-			<Button text="Move right" onClick={() => handleHorMovement(columnIndex + 1)} />
-			<Button text="Move up" onClick={() => handleVerMovement(cardIndex - 1)} />
-			<Button text="Move down" onClick={() => handleVerMovement(cardIndex + 1)} />
-			<Button text="Delete card" onClick={handleDeleteCard} />
+			<Text>{dueDate}</Text>
+			<Text>{description}</Text>
+			<Text>{assignee}</Text>
 		</AutoLayout>
 	)
 }

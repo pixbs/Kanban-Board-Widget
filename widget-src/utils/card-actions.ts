@@ -17,6 +17,8 @@ function cardAction(type: string, card: CardProps, board: ColumnProps[] | undefi
 			return moveCard(board, card, columnIndex, cardIndex - 1)
 		case 'move-down':
 			return moveCard(board, card, columnIndex, cardIndex + 1)
+		case 'update':
+			return moveCard(board, card, columnIndex, cardIndex)
 	}
 	return board
 }
